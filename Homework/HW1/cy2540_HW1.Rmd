@@ -1,0 +1,152 @@
+---
+title: "cy2540_HW1"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+# P3
+# a
+```{r}
+set.seed(1) # ensure consistent results
+x=rnorm(100, mean=0, sd=1) # feature X
+```
+# b
+```{r}
+eps=rnorm(100, mean=0, sd=1)
+```
+# c
+```{r}
+y = -1 + 0.5*x + eps
+length(y)
+```
+# d
+```{r}
+plot(x, y, xlab="X", ylab="Y", main="Relationship between X and Y")
+```
+
+# e
+```{r}
+lm.fit = lm(y~x)
+confint(lm.fit)
+summary(lm.fit)
+plot(x, y, xlab="X", ylab="Y", main="Relationship between X and Y")
+abline(lm.fit)
+```
+
+# f 
+```{r}
+par(col='black')
+plot(x, y, xlab="X", ylab="Y", main="Relationship between X and Y")
+abline(lm.fit, col='blue', lty=5) # least squares line
+abline(a=-1, b=0.5, col='red', lty=1) # population regression line
+legend('topleft', inset=0.05, c('least squares line', 'population regression line'), lty=c(5, 1), col=c('blue', 'red'), bty = "o")
+```
+
+# g
+```{r}
+# polynomial regression
+Poly_fit = lm(y ~ poly(x,2))
+# show regression result
+summary(Poly_fit)
+# creat points to draw fitting line
+xlims = range(x)
+x.grid = seq(from=xlims[1], to=xlims[2])
+preds = predict(Poly_fit, newdata=list(x=x.grid), se=TRUE)
+# use standard error to creat wrapper line
+se.bands = cbind(preds$fit+2*preds$se.fit, preds$fit-2*preds$se.fit)
+# draw 
+plot(x, y, xlab="X", ylab="Y", main='Degree-2 Polynomial', col="black")
+lines(x.grid, preds$fit, lwd=2, col="blue", lty=1)
+matlines(x.grid, se.bands, lwd=1, col="red", lty=5)
+legend('topleft', inset=0.05, c('polynomial regression line', 'SE wrapper line'), lwd=c(2, 1), lty=c(1, 5), col=c('blue', 'red'), bty = "o")
+```
+
+
+
+
+# P4
+```{r}
+Advertising = read.csv("/Users/yangchenye/Downloads/Advertising.csv",header=T,na.strings="?") 
+dim(Advertising)
+Advertising=na.omit(Advertising) # remove incomplete cases
+dim(Advertising)
+names(Advertising)
+attach(Advertising)
+
+# TV
+TV_fit = lm(sales~TV) # least squares model
+TV_CI = confint(TV_fit, level = 0.92) # 92% confidence intervals
+
+plot(TV, sales, xlab="TV advertising", ylab="Sales", main="Relationship between Sales and TV advertising") # scatterplot
+abline(TV_fit, col='blue', lty=1) # least squares line
+abline(a=TV_CI[1,1], b=TV_CI[2,1], col='red', lty=5) # 92% confidence intervals line
+abline(a=TV_CI[1,2], b=TV_CI[2,2], col='red', lty=5) # 92% confidence intervals line
+legend('topleft', inset=0.05, c('least squares line', '92% confidence intervals line'), lty=c(1, 5), col=c('blue', 'red'), bty = "o")
+
+# Radio
+Radio_fit = lm(sales~radio) # least squares model
+Radio_CI = confint(Radio_fit, level = 0.92) # 92% confidence intervals
+
+plot(radio, sales, xlab="Radio advertising", ylab="Sales", main="Relationship between Sales and Radio advertising") # scatterplot
+abline(Radio_fit, col='blue', lty=1) # least squares line
+abline(a=Radio_CI[1,1], b=Radio_CI[2,1], col='red', lty=5) # 92% confidence intervals line
+abline(a=Radio_CI[1,2], b=Radio_CI[2,2], col='red', lty=5) # 92% confidence intervals line
+legend('topleft', inset=0.05, c('least squares line', '92% confidence intervals line'), lty=c(1, 5), col=c('blue', 'red'), bty = "o")
+
+# Newspaper
+Newspaper_fit = lm(sales~newspaper) # least squares model
+Newspaper_CI = confint(Newspaper_fit, level = 0.92) # 92% confidence intervals
+
+plot(newspaper, sales, xlab="Newspaper advertising", ylab="Sales", main="Relationship between Sales and Newspaper advertising") # scatterplot
+abline(Newspaper_fit, col='blue', lty=1) # least squares line
+abline(a=Newspaper_CI[1,1], b=Newspaper_CI[2,1], col='red', lty=5) # 92% confidence intervals line
+abline(a=Newspaper_CI[1,2], b=Newspaper_CI[2,2], col='red', lty=5) # 92% confidence intervals line
+legend('bottomright', inset=0.05, c('least squares line', '92% confidence intervals line'), lty=c(1, 5), col=c('blue', 'red'), bty = "o")
+
+# pairs(~ TV + radio + newspaper + sales, Advertising)
+```
+
+
+# P5
+# a
+```{r}
+Auto = read.csv("/Users/yangchenye/Downloads/Auto.csv",header=T,na.strings="?") 
+dim(Auto)
+Auto=na.omit(Auto) # remove incomplete cases
+dim(Auto)
+names(Auto)
+attach(Auto)
+# pairs(~ mpg + cylinders + displacement + horsepower + weight + acceleration + year + origin + name, Auto)
+pairs(Auto)
+```
+
+# b
+```{r}
+CRM = cor(Auto[,1:8])
+print(CRM)
+```
+
+# c
+```{r}
+mlm_fit = lm(mpg~cylinders + displacement + horsepower + weight + acceleration + year + origin)
+summary(mlm_fit)
+```
+
+
+# d
+```{r}
+mlm_fit_log = lm(log10(mpg)~log10(cylinders) + log10(displacement) +log10(horsepower) + log10(weight) + log10(acceleration) + log10(year) + log10(origin))
+summary(mlm_fit_log)
+
+mlm_fit_sqrt = lm(sqrt(mpg)~sqrt(cylinders) + sqrt(displacement) +sqrt(horsepower) + sqrt(weight) + sqrt(acceleration) + sqrt(year) + sqrt(origin))
+summary(mlm_fit_sqrt)
+
+mlm_fit_power = lm(mpg^2~cylinders^2 + displacement^2 + horsepower^2 + weight^2 + acceleration^2 + year^2 + origin^2)
+summary(mlm_fit_power)
+```
+
