@@ -9,53 +9,45 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r data load}
 library(RWeka)
-A11=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/phone/accel/data_160",1:9,'_accel_phone.arff',sep="")
-A12=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/phone/accel/data_16",10:50,'_accel_phone.arff',sep="")
+A11=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/accel/data_160",1:9,'_accel_phone.arff',sep="")
+A12=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/accel/data_16",10:50,'_accel_phone.arff',sep="")
 A1=c(A11,A12)
 N11=paste("data_160",1:9,'_accel_phone',sep="")
 N12=paste("data_16",10:50,'_accel_phone',sep="")
 N1=c(N11,N12)
-
 accel_phone = read.arff(file(description=A1[1]))
 for (i in 2:50){
   D = read.arff(file(description=A1[i]))
   accel_phone = rbind(accel_phone,D)
 }
-
-
-A21=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/phone/gyro/data_160",1:9,'_gyro_phone.arff',sep="")
-A22=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/phone/gyro/data_16",10:50,'_gyro_phone.arff',sep="")
+A21=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/gyro/data_160",1:9,'_gyro_phone.arff',sep="")
+A22=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/gyro/data_16",10:50,'_gyro_phone.arff',sep="")
 A2=c(A21,A22)
 N21=paste("data_160",1:9,'_gyro_phone',sep="")
 N22=paste("data_16",10:50,'_gyro_phone',sep="")
 N2=c(N21,N22)
-
 gyro_phone = read.arff(file(description=A2[1]))
 for (i in 2:50){
   D = read.arff(file(description=A2[i]))
   gyro_phone = rbind(gyro_phone,D)
 }
-
-A31=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/watch/accel/data_160",1:9,'_accel_watch.arff',sep="")
-A32=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/watch/accel/data_16",10:50,'_accel_watch.arff',sep="")
+A31=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/accel/data_160",1:9,'_accel_watch.arff',sep="")
+A32=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/accel/data_16",10:50,'_accel_watch.arff',sep="")
 A3=c(A31,A32)
 N31=paste("data_160",1:9,'_accel_watch',sep="")
 N32=paste("data_16",10:50,'_accel_watch',sep="")
 N3=c(N31,N32)
-
 accel_watch = read.arff(file(description=A3[1]))
 for (i in 1:50){
   D = read.arff(file(description=A3[i]))
   accel_watch = rbind(accel_watch, D)
 }
-
-A41=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/watch/gyro/data_160",1:9,'_gyro_watch.arff',sep="")
-A42=paste("C:/Users/bw2632/Desktop/wisdm-dataset/arff_files/watch/gyro/data_16",10:50,'_gyro_watch.arff',sep="")
+A41=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/gyro/data_160",1:9,'_gyro_watch.arff',sep="")
+A42=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/gyro/data_16",10:50,'_gyro_watch.arff',sep="")
 A4=c(A41,A42)
 N41=paste("data_160",1:9,'_gyro_watch',sep="")
 N42=paste("data_16",10:50,'_gyro_watch',sep="")
 N4=c(N41,N42)
-
 gyro_watch = read.arff(file(description=A4[1]))
 for (i in 1:50){
   D = read.arff(file(description=A4[i]))
@@ -68,4 +60,43 @@ ap = accel_phone[,c(1:43,92,93)]
 aw = accel_watch[,c(1:43,92,93)]
 gp = gyro_phone[,c(1:43,92,93)]
 gw = gyro_watch[,c(1:43,92,93)]
+
+a_ap <- subset(ap,ACTIVITY=='A')
+
+```
+
+```{r knn}
+library(ISLR)
+library(caret)
+trControl <- trainControl(method = "cv", number = 10)
+fit <- train(class~., 
+             method = "knn", 
+             trControl = trControl,
+             metric = "Accuracy",
+             data = a_ap)
+fit
+```
+
+```{r dt_cart}
+library(ISLR)
+library(caret)
+trControl <- trainControl(method = "cv", number = 10)
+fit <- train(class~., 
+             method = "rpart", 
+             trControl = trControl,
+             metric = "Accuracy",
+             data = a_ap)
+fit
+```
+
+```{r rf}
+library(ISLR)
+library(caret)
+trControl <- trainControl(method = "cv", number = 10)
+fit <- train(class~., 
+             method = "ordinalRF", 
+             trControl = trControl,
+             metric = "Accuracy",
+             data = a_ap)
+fit
 ```
