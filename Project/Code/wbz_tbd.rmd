@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Identification"
 output: pdf_document
 ---
 
@@ -8,53 +8,121 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r data load}
+
+#Load data from .arff files.
+
 library(RWeka)
-A11=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/phone/accel/data_160",1:9,'_accel_phone.arff',sep="")
-A12=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/phone/accel/data_16",21:50,'_accel_phone.arff',sep="")
+
+A11=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/accel/data_160",1:9,'_accel_phone.arff',sep="")
+A12=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/accel/data_16",21:50,'_accel_phone.arff',sep="")
 A1=c(A11,A12)
 accel_phone = read.arff(file(description=A1[1]))
-for (i in 2:39){
+for (i in 2:25){
   D = read.arff(file(description=A1[i]))
   accel_phone = rbind(accel_phone,D)
 }
+accel_phone = rbind(accel_phone, read.arff(file(description=A1[31])))
+accel_phone = rbind(accel_phone, read.arff(file(description=A1[32])))
+for (i in 34:39){
+  D = read.arff(file(description=A1[i]))
+  accel_phone = rbind(accel_phone, D)
+}
 
-A21=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/phone/gyro/data_160",1:9,'_gyro_phone.arff',sep="")
-A22=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/phone/gyro/data_16",21:50,'_gyro_phone.arff',sep="")
+A21=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/gyro/data_160",1:9,'_gyro_phone.arff',sep="")
+A22=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/phone/gyro/data_16",21:50,'_gyro_phone.arff',sep="")
 A2=c(A21,A22)
 gyro_phone = read.arff(file(description=A2[1]))
-for (i in 2:39){
+for (i in 2:25){
   D = read.arff(file(description=A2[i]))
   gyro_phone = rbind(gyro_phone,D)
 }
+gyro_phone = rbind(gyro_phone, read.arff(file(description=A2[31])))
+gyro_phone = rbind(gyro_phone, read.arff(file(description=A2[32])))
+for (i in 34:39){
+  D = read.arff(file(description=A2[i]))
+  gyro_phone = rbind(gyro_phone, D)
+}
 
-A31=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/watch/accel/data_160",1:9,'_accel_watch.arff',sep="")
-A32=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/watch/accel/data_16",21:50,'_accel_watch.arff',sep="")
+
+
+A31=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/accel/data_160",1:9,'_accel_watch.arff',sep="")
+A32=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/accel/data_16",21:50,'_accel_watch.arff',sep="")
 A3=c(A31,A32)
 accel_watch = read.arff(file(description=A3[1]))
-for (i in 2:39){
+for (i in 2:25){
+  D = read.arff(file(description=A3[i]))
+  accel_watch = rbind(accel_watch, D)
+}
+accel_watch = rbind(accel_watch, read.arff(file(description=A3[31])))
+accel_watch = rbind(accel_watch, read.arff(file(description=A3[32])))
+for (i in 34:39){
   D = read.arff(file(description=A3[i]))
   accel_watch = rbind(accel_watch, D)
 }
 
-A41=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/watch/gyro/data_160",1:9,'_gyro_watch.arff',sep="")
-A42=paste("C:/Users/bw2632/Downloads/wisdm-dataset/arff_files/watch/gyro/data_16",21:50,'_gyro_watch.arff',sep="")
+
+A41=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/gyro/data_160",1:9,'_gyro_watch.arff',sep="")
+A42=paste("D:/desktop/6690/project/wisdm-dataset/arff_files/watch/gyro/data_16",21:50,'_gyro_watch.arff',sep="")
 A4=c(A41,A42)
 gyro_watch = read.arff(file(description=A4[1]))
-for (i in 2:39){
+for (i in 2:25){
+  D = read.arff(file(description=A4[i]))
+  gyro_watch = rbind(gyro_watch, D)
+}
+gyro_watch = rbind(gyro_watch, read.arff(file(description=A4[31])))
+gyro_watch = rbind(gyro_watch, read.arff(file(description=A4[32])))
+for (i in 34:39){
   D = read.arff(file(description=A4[i]))
   gyro_watch = rbind(gyro_watch, D)
 }
 ```
 
 ```{r feature extraction}
+
+# select and combine features.
+
 ap = accel_phone[,c(1:43,92,93)]
 aw = accel_watch[,c(1:43,92,93)]
 gp = gyro_phone[,c(1:43,92,93)]
 gw = gyro_watch[,c(1:43,92,93)]
-```
 
+activity_list = c('A','B','C','D','E','F','G','H','I','J','K','L','M','O','P','Q','R','S')
+class_list = c('1601','1602','1603','1604','1605','1606','1607','1608','1609','1621','1622','1623','1624','1625','1626','1627','1628','1629','1630','1631','1632','1633','1634','1635','1636','1642','1643','1645','1646','1647','1648','1649','1650')
+
+for (i in 1:18){
+  for (j in 1:33){
+    ap_x = subset(ap,(ACTIVITY==activity_list[i] & class==class_list[j]))
+    aw_x = subset(aw,(ACTIVITY==activity_list[i] & class==class_list[j]))
+    gp_x = subset(gp,(ACTIVITY==activity_list[i] & class==class_list[j]))
+    gw_x = subset(gw,(ACTIVITY==activity_list[i] & class==class_list[j]))
+    len = min(dim(ap_x)[1],dim(aw_x)[1],dim(gp_x)[1],dim(gw_x)[1])
+    p_x = cbind(ap_x[1:len,1:44],gp_x[1:len,2:45])
+    w_x = cbind(aw_x[1:len,1:44],gw_x[1:len,2:45])
+    a_x = cbind(ap_x[1:len,1:44],aw_x[1:len,2:45])
+    g_x = cbind(gp_x[1:len,1:44],gw_x[1:len,2:45])
+    all_x = cbind(p_x[1:len,1:87],p_x[1:len,2:88])
+    if (i==1 & j==1){
+      p = p_x
+      w = w_x
+      a = a_x
+      g = g_x
+      all = all_x
+    }
+    else{
+      p = rbind(p,p_x)
+      w = rbind(w,w_x)
+      a = rbind(a,a_x)
+      g = rbind(g,g_x)
+      all = rbind(all,all_x)
+    }
+  }
+}
+```
 
 ```{r ap knn}
+
+# KNN with single data in accelerometer on phone.
+
 library(caret)
 a_ap <- subset(ap,ACTIVITY=='A')
 b_ap <- subset(ap,ACTIVITY=='B')
@@ -75,134 +143,553 @@ q_ap <- subset(ap,ACTIVITY=='Q')
 r_ap <- subset(ap,ACTIVITY=='R')
 s_ap <- subset(ap,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_a <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = a_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_b <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = b_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_c <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = c_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_d <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = d_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_e <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = e_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_f <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = f_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_g <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = g_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_h <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = h_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_i <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = i_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_j <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = j_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_k <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = k_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_l <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = l_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_m <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = m_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_o <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = o_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_p <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = p_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_q <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = q_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_r <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = r_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_s <- train(class~., 
-             method = "knn", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = s_ap[,-1])
-fit_a$results[1,1:2]
-fit_b$results[1,1:2]
-fit_c$results[1,1:2]
-fit_d$results[1,1:2]
-fit_e$results[1,1:2]
-fit_f$results[1,1:2]
-fit_g$results[1,1:2]
-fit_h$results[1,1:2]
-fit_i$results[1,1:2]
-fit_j$results[1,1:2]
-fit_k$results[1,1:2]
-fit_l$results[1,1:2]
-fit_m$results[1,1:2]
-fit_o$results[1,1:2]
-fit_p$results[1,1:2]
-fit_q$results[1,1:2]
-fit_r$results[1,1:2]
-fit_s$results[1,1:2]
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_ap[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_ap[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_ap[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_ap[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_ap[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_ap[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_ap[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_ap[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_ap[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_ap[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_ap[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_ap[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_ap[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_ap[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_ap[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_ap[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_ap[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_ap[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
 ```
 
-```{r ap dt_cart}
+```{r aw knn}
+
+# KNN with single data in accelerometer on watch.
+
+library(caret)
+a_aw <- subset(aw,ACTIVITY=='A')
+b_aw <- subset(aw,ACTIVITY=='B')
+c_aw <- subset(aw,ACTIVITY=='C')
+d_aw <- subset(aw,ACTIVITY=='D')
+e_aw <- subset(aw,ACTIVITY=='E')
+f_aw <- subset(aw,ACTIVITY=='F')
+g_aw <- subset(aw,ACTIVITY=='G')
+h_aw <- subset(aw,ACTIVITY=='H')
+i_aw <- subset(aw,ACTIVITY=='I')
+j_aw <- subset(aw,ACTIVITY=='J')
+k_aw <- subset(aw,ACTIVITY=='K')
+l_aw <- subset(aw,ACTIVITY=='L')
+m_aw <- subset(aw,ACTIVITY=='M')
+o_aw <- subset(aw,ACTIVITY=='O')
+p_aw <- subset(aw,ACTIVITY=='P')
+q_aw <- subset(aw,ACTIVITY=='Q')
+r_aw <- subset(aw,ACTIVITY=='R')
+s_aw <- subset(aw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_aw[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_aw[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_aw[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_aw[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_aw[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_aw[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_aw[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_aw[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_aw[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_aw[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_aw[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_aw[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_aw[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_aw[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_aw[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_aw[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_aw[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_aw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gp knn}
+
+# KNN with single data in gyroscope on phone.
+
+library(caret)
+a_gp <- subset(gp,ACTIVITY=='A')
+b_gp <- subset(gp,ACTIVITY=='B')
+c_gp <- subset(gp,ACTIVITY=='C')
+d_gp <- subset(gp,ACTIVITY=='D')
+e_gp <- subset(gp,ACTIVITY=='E')
+f_gp <- subset(gp,ACTIVITY=='F')
+g_gp <- subset(gp,ACTIVITY=='G')
+h_gp <- subset(gp,ACTIVITY=='H')
+i_gp <- subset(gp,ACTIVITY=='I')
+j_gp <- subset(gp,ACTIVITY=='J')
+k_gp <- subset(gp,ACTIVITY=='K')
+l_gp <- subset(gp,ACTIVITY=='L')
+m_gp <- subset(gp,ACTIVITY=='M')
+o_gp <- subset(gp,ACTIVITY=='O')
+p_gp <- subset(gp,ACTIVITY=='P')
+q_gp <- subset(gp,ACTIVITY=='Q')
+r_gp <- subset(gp,ACTIVITY=='R')
+s_gp <- subset(gp,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_gp[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_gp[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_gp[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_gp[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_gp[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_gp[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_gp[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_gp[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_gp[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_gp[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_gp[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_gp[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_gp[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_gp[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_gp[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_gp[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_gp[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_gp[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gw knn}
+
+# KNN with single data in gyroscope on watch.
+
+library(caret)
+a_gw <- subset(gw,ACTIVITY=='A')
+b_gw <- subset(gw,ACTIVITY=='B')
+c_gw <- subset(gw,ACTIVITY=='C')
+d_gw <- subset(gw,ACTIVITY=='D')
+e_gw <- subset(gw,ACTIVITY=='E')
+f_gw <- subset(gw,ACTIVITY=='F')
+g_gw <- subset(gw,ACTIVITY=='G')
+h_gw <- subset(gw,ACTIVITY=='H')
+i_gw <- subset(gw,ACTIVITY=='I')
+j_gw <- subset(gw,ACTIVITY=='J')
+k_gw <- subset(gw,ACTIVITY=='K')
+l_gw <- subset(gw,ACTIVITY=='L')
+m_gw <- subset(gw,ACTIVITY=='M')
+o_gw <- subset(gw,ACTIVITY=='O')
+p_gw <- subset(gw,ACTIVITY=='P')
+q_gw <- subset(gw,ACTIVITY=='Q')
+r_gw <- subset(gw,ACTIVITY=='R')
+s_gw <- subset(gw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_gw[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_gw[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_gw[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_gw[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_gw[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_gw[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_gw[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_gw[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_gw[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_gw[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_gw[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_gw[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_gw[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_gw[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_gw[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_gw[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_gw[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_gw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r p knn}
+
+# KNN with combined data in both accelerometer and gyroscope on phone.
+
+library(caret)
+a_p <- subset(p,ACTIVITY=='A')
+b_p <- subset(p,ACTIVITY=='B')
+c_p <- subset(p,ACTIVITY=='C')
+d_p <- subset(p,ACTIVITY=='D')
+e_p <- subset(p,ACTIVITY=='E')
+f_p <- subset(p,ACTIVITY=='F')
+g_p <- subset(p,ACTIVITY=='G')
+h_p <- subset(p,ACTIVITY=='H')
+i_p <- subset(p,ACTIVITY=='I')
+j_p <- subset(p,ACTIVITY=='J')
+k_p <- subset(p,ACTIVITY=='K')
+l_p <- subset(p,ACTIVITY=='L')
+m_p <- subset(p,ACTIVITY=='M')
+o_p <- subset(p,ACTIVITY=='O')
+p_p <- subset(p,ACTIVITY=='P')
+q_p <- subset(p,ACTIVITY=='Q')
+r_p <- subset(p,ACTIVITY=='R')
+s_p <- subset(p,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_p[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_p[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_p[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_p[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_p[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_p[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_p[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_p[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_p[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_p[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_p[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_p[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_p[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_p[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_p[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_p[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_p[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_p[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r w knn}
+
+# KNN with combined data in both accelerometer and gyroscope on watch.
+
+library(caret)
+a_w <- subset(w,ACTIVITY=='A')
+b_w <- subset(w,ACTIVITY=='B')
+c_w <- subset(w,ACTIVITY=='C')
+d_w <- subset(w,ACTIVITY=='D')
+e_w <- subset(w,ACTIVITY=='E')
+f_w <- subset(w,ACTIVITY=='F')
+g_w <- subset(w,ACTIVITY=='G')
+h_w <- subset(w,ACTIVITY=='H')
+i_w <- subset(w,ACTIVITY=='I')
+j_w <- subset(w,ACTIVITY=='J')
+k_w <- subset(w,ACTIVITY=='K')
+l_w <- subset(w,ACTIVITY=='L')
+m_w <- subset(w,ACTIVITY=='M')
+o_w <- subset(w,ACTIVITY=='O')
+p_w <- subset(w,ACTIVITY=='P')
+q_w <- subset(w,ACTIVITY=='Q')
+r_w <- subset(w,ACTIVITY=='R')
+s_w <- subset(w,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_w[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_w[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_w[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_w[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_w[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_w[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_w[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_w[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_w[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_w[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_w[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_w[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_w[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_w[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_w[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_w[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_w[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_w[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r a knn}
+
+# KNN with combined data in accelerometer on both phone and watch.
+
+library(caret)
+a_a <- subset(a,ACTIVITY=='A')
+b_a <- subset(a,ACTIVITY=='B')
+c_a <- subset(a,ACTIVITY=='C')
+d_a <- subset(a,ACTIVITY=='D')
+e_a <- subset(a,ACTIVITY=='E')
+f_a <- subset(a,ACTIVITY=='F')
+g_a <- subset(a,ACTIVITY=='G')
+h_a <- subset(a,ACTIVITY=='H')
+i_a <- subset(a,ACTIVITY=='I')
+j_a <- subset(a,ACTIVITY=='J')
+k_a <- subset(a,ACTIVITY=='K')
+l_a <- subset(a,ACTIVITY=='L')
+m_a <- subset(a,ACTIVITY=='M')
+o_a <- subset(a,ACTIVITY=='O')
+p_a <- subset(a,ACTIVITY=='P')
+q_a <- subset(a,ACTIVITY=='Q')
+r_a <- subset(a,ACTIVITY=='R')
+s_a <- subset(a,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_a[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_a[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_a[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_a[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_a[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_a[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_a[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_a[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_a[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_a[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_a[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_a[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_a[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_a[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_a[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_a[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_a[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_a[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r g knn}
+
+# KNN with combined data in gyroscope on both phone and watch.
+
+library(caret)
+a_g <- subset(g,ACTIVITY=='A')
+b_g <- subset(g,ACTIVITY=='B')
+c_g <- subset(g,ACTIVITY=='C')
+d_g <- subset(g,ACTIVITY=='D')
+e_g <- subset(g,ACTIVITY=='E')
+f_g <- subset(g,ACTIVITY=='F')
+g_g <- subset(g,ACTIVITY=='G')
+h_g <- subset(g,ACTIVITY=='H')
+i_g <- subset(g,ACTIVITY=='I')
+j_g <- subset(g,ACTIVITY=='J')
+k_g <- subset(g,ACTIVITY=='K')
+l_g <- subset(g,ACTIVITY=='L')
+m_g <- subset(g,ACTIVITY=='M')
+o_g <- subset(g,ACTIVITY=='O')
+p_g <- subset(g,ACTIVITY=='P')
+q_g <- subset(g,ACTIVITY=='Q')
+r_g <- subset(g,ACTIVITY=='R')
+s_g <- subset(g,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_g[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_g[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_g[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_g[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_g[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_g[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_g[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_g[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_g[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_g[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_g[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_g[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_g[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_g[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_g[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_g[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_g[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_g[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r all knn}
+
+# KNN with all data combined together.
+
+library(caret)
+a_all <- subset(all,ACTIVITY=='A')
+b_all <- subset(all,ACTIVITY=='B')
+c_all <- subset(all,ACTIVITY=='C')
+d_all <- subset(all,ACTIVITY=='D')
+e_all <- subset(all,ACTIVITY=='E')
+f_all <- subset(all,ACTIVITY=='F')
+g_all <- subset(all,ACTIVITY=='G')
+h_all <- subset(all,ACTIVITY=='H')
+i_all <- subset(all,ACTIVITY=='I')
+j_all <- subset(all,ACTIVITY=='J')
+k_all <- subset(all,ACTIVITY=='K')
+l_all <- subset(all,ACTIVITY=='L')
+m_all <- subset(all,ACTIVITY=='M')
+o_all <- subset(all,ACTIVITY=='O')
+p_all <- subset(all,ACTIVITY=='P')
+q_all <- subset(all,ACTIVITY=='Q')
+r_all <- subset(all,ACTIVITY=='R')
+s_all <- subset(all,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=a_all[,-1])
+fit_b <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=b_all[,-1])
+fit_c <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=c_all[,-1])
+fit_d <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=d_all[,-1])
+fit_e <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=e_all[,-1])
+fit_f <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=f_all[,-1])
+fit_g <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=g_all[,-1])
+fit_h <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=h_all[,-1])
+fit_i <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=i_all[,-1])
+fit_j <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=j_all[,-1])
+fit_k <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=k_all[,-1])
+fit_l <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=l_all[,-1])
+fit_m <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=m_all[,-1])
+fit_o <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=o_all[,-1])
+fit_p <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=p_all[,-1])
+fit_q <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=q_all[,-1])
+fit_r <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=r_all[,-1])
+fit_s <- train(class~., method="knn", trControl=trControl, metric="Accuracy", data=s_all[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r ap cart}
+
+# Tree-based method for single data in accelerometer on phone.
+
 library(caret)
 a_ap <- subset(ap,ACTIVITY=='A')
 b_ap <- subset(ap,ACTIVITY=='B')
@@ -223,113 +710,529 @@ q_ap <- subset(ap,ACTIVITY=='Q')
 r_ap <- subset(ap,ACTIVITY=='R')
 s_ap <- subset(ap,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_a <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = a_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_ap[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_ap[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_ap[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_ap[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_ap[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_ap[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_ap[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_ap[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_ap[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_ap[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_ap[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_ap[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_ap[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_ap[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_ap[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_ap[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_ap[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_ap[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r aw cart}
+
+# Tree-based method based on single data in accelerometer on watch.
+
+library(caret)
+a_aw <- subset(aw,ACTIVITY=='A')
+b_aw <- subset(aw,ACTIVITY=='B')
+c_aw <- subset(aw,ACTIVITY=='C')
+d_aw <- subset(aw,ACTIVITY=='D')
+e_aw <- subset(aw,ACTIVITY=='E')
+f_aw <- subset(aw,ACTIVITY=='F')
+g_aw <- subset(aw,ACTIVITY=='G')
+h_aw <- subset(aw,ACTIVITY=='H')
+i_aw <- subset(aw,ACTIVITY=='I')
+j_aw <- subset(aw,ACTIVITY=='J')
+k_aw <- subset(aw,ACTIVITY=='K')
+l_aw <- subset(aw,ACTIVITY=='L')
+m_aw <- subset(aw,ACTIVITY=='M')
+o_aw <- subset(aw,ACTIVITY=='O')
+p_aw <- subset(aw,ACTIVITY=='P')
+q_aw <- subset(aw,ACTIVITY=='Q')
+r_aw <- subset(aw,ACTIVITY=='R')
+s_aw <- subset(aw,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_b <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = b_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_aw[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_aw[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_aw[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_aw[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_aw[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_aw[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_aw[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_aw[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_aw[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_aw[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_aw[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_aw[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_aw[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_aw[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_aw[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_aw[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_aw[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_aw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gp cart}
+
+# Tree-based method based on single data in gyroscope on phone.
+
+library(caret)
+a_gp <- subset(gp,ACTIVITY=='A')
+b_gp <- subset(gp,ACTIVITY=='B')
+c_gp <- subset(gp,ACTIVITY=='C')
+d_gp <- subset(gp,ACTIVITY=='D')
+e_gp <- subset(gp,ACTIVITY=='E')
+f_gp <- subset(gp,ACTIVITY=='F')
+g_gp <- subset(gp,ACTIVITY=='G')
+h_gp <- subset(gp,ACTIVITY=='H')
+i_gp <- subset(gp,ACTIVITY=='I')
+j_gp <- subset(gp,ACTIVITY=='J')
+k_gp <- subset(gp,ACTIVITY=='K')
+l_gp <- subset(gp,ACTIVITY=='L')
+m_gp <- subset(gp,ACTIVITY=='M')
+o_gp <- subset(gp,ACTIVITY=='O')
+p_gp <- subset(gp,ACTIVITY=='P')
+q_gp <- subset(gp,ACTIVITY=='Q')
+r_gp <- subset(gp,ACTIVITY=='R')
+s_gp <- subset(gp,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_c <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = c_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_gp[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_gp[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_gp[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_gp[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_gp[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_gp[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_gp[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_gp[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_gp[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_gp[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_gp[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_gp[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_gp[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_gp[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_gp[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_gp[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_gp[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_gp[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gw cart}
+
+# Tree-based method based on single data in gyroscope on watch.
+
+library(caret)
+a_gw <- subset(gw,ACTIVITY=='A')
+b_gw <- subset(gw,ACTIVITY=='B')
+c_gw <- subset(gw,ACTIVITY=='C')
+d_gw <- subset(gw,ACTIVITY=='D')
+e_gw <- subset(gw,ACTIVITY=='E')
+f_gw <- subset(gw,ACTIVITY=='F')
+g_gw <- subset(gw,ACTIVITY=='G')
+h_gw <- subset(gw,ACTIVITY=='H')
+i_gw <- subset(gw,ACTIVITY=='I')
+j_gw <- subset(gw,ACTIVITY=='J')
+k_gw <- subset(gw,ACTIVITY=='K')
+l_gw <- subset(gw,ACTIVITY=='L')
+m_gw <- subset(gw,ACTIVITY=='M')
+o_gw <- subset(gw,ACTIVITY=='O')
+p_gw <- subset(gw,ACTIVITY=='P')
+q_gw <- subset(gw,ACTIVITY=='Q')
+r_gw <- subset(gw,ACTIVITY=='R')
+s_gw <- subset(gw,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_d <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = d_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_gw[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_gw[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_gw[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_gw[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_gw[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_gw[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_gw[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_gw[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_gw[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_gw[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_gw[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_gw[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_gw[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_gw[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_gw[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_gw[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_gw[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_gw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r p cart}
+
+# Tree-based method based on combined data on watch (both accelerometer and gyroscope).
+
+library(caret)
+a_p <- subset(p,ACTIVITY=='A')
+b_p <- subset(p,ACTIVITY=='B')
+c_p <- subset(p,ACTIVITY=='C')
+d_p <- subset(p,ACTIVITY=='D')
+e_p <- subset(p,ACTIVITY=='E')
+f_p <- subset(p,ACTIVITY=='F')
+g_p <- subset(p,ACTIVITY=='G')
+h_p <- subset(p,ACTIVITY=='H')
+i_p <- subset(p,ACTIVITY=='I')
+j_p <- subset(p,ACTIVITY=='J')
+k_p <- subset(p,ACTIVITY=='K')
+l_p <- subset(p,ACTIVITY=='L')
+m_p <- subset(p,ACTIVITY=='M')
+o_p <- subset(p,ACTIVITY=='O')
+p_p <- subset(p,ACTIVITY=='P')
+q_p <- subset(p,ACTIVITY=='Q')
+r_p <- subset(p,ACTIVITY=='R')
+s_p <- subset(p,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_e <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = e_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_p[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_p[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_p[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_p[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_p[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_p[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_p[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_p[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_p[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_p[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_p[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_p[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_p[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_p[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_p[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_p[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_p[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_p[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r w cart}
+
+# Tree-based method based on combined data on watch (both accelerometer and gyroscope).
+
+library(caret)
+a_w <- subset(w,ACTIVITY=='A')
+b_w <- subset(w,ACTIVITY=='B')
+c_w <- subset(w,ACTIVITY=='C')
+d_w <- subset(w,ACTIVITY=='D')
+e_w <- subset(w,ACTIVITY=='E')
+f_w <- subset(w,ACTIVITY=='F')
+g_w <- subset(w,ACTIVITY=='G')
+h_w <- subset(w,ACTIVITY=='H')
+i_w <- subset(w,ACTIVITY=='I')
+j_w <- subset(w,ACTIVITY=='J')
+k_w <- subset(w,ACTIVITY=='K')
+l_w <- subset(w,ACTIVITY=='L')
+m_w <- subset(w,ACTIVITY=='M')
+o_w <- subset(w,ACTIVITY=='O')
+p_w <- subset(w,ACTIVITY=='P')
+q_w <- subset(w,ACTIVITY=='Q')
+r_w <- subset(w,ACTIVITY=='R')
+s_w <- subset(w,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_f <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = f_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_w[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_w[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_w[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_w[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_w[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_w[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_w[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_w[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_w[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_w[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_w[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_w[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_w[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_w[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_w[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_w[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_w[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_w[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r a cart}
+
+# Tree-based method based on combined data in accelerometer.
+
+library(caret)
+a_a <- subset(a,ACTIVITY=='A')
+b_a <- subset(a,ACTIVITY=='B')
+c_a <- subset(a,ACTIVITY=='C')
+d_a <- subset(a,ACTIVITY=='D')
+e_a <- subset(a,ACTIVITY=='E')
+f_a <- subset(a,ACTIVITY=='F')
+g_a <- subset(a,ACTIVITY=='G')
+h_a <- subset(a,ACTIVITY=='H')
+i_a <- subset(a,ACTIVITY=='I')
+j_a <- subset(a,ACTIVITY=='J')
+k_a <- subset(a,ACTIVITY=='K')
+l_a <- subset(a,ACTIVITY=='L')
+m_a <- subset(a,ACTIVITY=='M')
+o_a <- subset(a,ACTIVITY=='O')
+p_a <- subset(a,ACTIVITY=='P')
+q_a <- subset(a,ACTIVITY=='Q')
+r_a <- subset(a,ACTIVITY=='R')
+s_a <- subset(a,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_g <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = g_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_a[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_a[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_a[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_a[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_a[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_a[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_a[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_a[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_a[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_a[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_a[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_a[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_a[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_a[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_a[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_a[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_a[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_a[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r g cart}
+
+# Tree-based method based on combined data in gyroscope.
+
+library(caret)
+a_g <- subset(g,ACTIVITY=='A')
+b_g <- subset(g,ACTIVITY=='B')
+c_g <- subset(g,ACTIVITY=='C')
+d_g <- subset(g,ACTIVITY=='D')
+e_g <- subset(g,ACTIVITY=='E')
+f_g <- subset(g,ACTIVITY=='F')
+g_g <- subset(g,ACTIVITY=='G')
+h_g <- subset(g,ACTIVITY=='H')
+i_g <- subset(g,ACTIVITY=='I')
+j_g <- subset(g,ACTIVITY=='J')
+k_g <- subset(g,ACTIVITY=='K')
+l_g <- subset(g,ACTIVITY=='L')
+m_g <- subset(g,ACTIVITY=='M')
+o_g <- subset(g,ACTIVITY=='O')
+p_g <- subset(g,ACTIVITY=='P')
+q_g <- subset(g,ACTIVITY=='Q')
+r_g <- subset(g,ACTIVITY=='R')
+s_g <- subset(g,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_h <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = h_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_g[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_g[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_g[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_g[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_g[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_g[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_g[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_g[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_g[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_g[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_g[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_g[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_g[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_g[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_g[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_g[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_g[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_g[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r all cart}
+
+# Tree-based method based on all combined data.
+
+library(caret)
+a_all <- subset(all,ACTIVITY=='A')
+b_all <- subset(all,ACTIVITY=='B')
+c_all <- subset(all,ACTIVITY=='C')
+d_all <- subset(all,ACTIVITY=='D')
+e_all <- subset(all,ACTIVITY=='E')
+f_all <- subset(all,ACTIVITY=='F')
+g_all <- subset(all,ACTIVITY=='G')
+h_all <- subset(all,ACTIVITY=='H')
+i_all <- subset(all,ACTIVITY=='I')
+j_all <- subset(all,ACTIVITY=='J')
+k_all <- subset(all,ACTIVITY=='K')
+l_all <- subset(all,ACTIVITY=='L')
+m_all <- subset(all,ACTIVITY=='M')
+o_all <- subset(all,ACTIVITY=='O')
+p_all <- subset(all,ACTIVITY=='P')
+q_all <- subset(all,ACTIVITY=='Q')
+r_all <- subset(all,ACTIVITY=='R')
+s_all <- subset(all,ACTIVITY=='S')
 trControl <- trainControl(method = "cv", number = 10)
-fit_i <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = i_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_j <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = j_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_k <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = k_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_l <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = l_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_m <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = m_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_o <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = o_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_p <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = p_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_q <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = q_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_r <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = r_ap[,-1])
-trControl <- trainControl(method = "cv", number = 10)
-fit_s <- train(class~., 
-             method = "J48", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = s_ap[,-1])
+fit_a <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=a_all[,-1])
+fit_b <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=b_all[,-1])
+fit_c <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=c_all[,-1])
+fit_d <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=d_all[,-1])
+fit_e <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=e_all[,-1])
+fit_f <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=f_all[,-1])
+fit_g <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=g_all[,-1])
+fit_h <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=h_all[,-1])
+fit_i <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=i_all[,-1])
+fit_j <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=j_all[,-1])
+fit_k <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=k_all[,-1])
+fit_l <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=l_all[,-1])
+fit_m <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=m_all[,-1])
+fit_o <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=o_all[,-1])
+fit_p <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=p_all[,-1])
+fit_q <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=q_all[,-1])
+fit_r <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=r_all[,-1])
+fit_s <- train(class~., method="J48", trControl=trControl, metric="Accuracy", data=s_all[,-1])
+
 fit_a$results
 fit_b$results
 fit_c$results
@@ -351,6 +1254,9 @@ fit_s$results
 ```
 
 ```{r ap rf}
+
+# Random forest based on single data in accelerometer on phone.
+
 library(caret)
 a_ap <- subset(ap,ACTIVITY=='A')
 b_ap <- subset(ap,ACTIVITY=='B')
@@ -370,135 +1276,27 @@ p_ap <- subset(ap,ACTIVITY=='P')
 q_ap <- subset(ap,ACTIVITY=='Q')
 r_ap <- subset(ap,ACTIVITY=='R')
 s_ap <- subset(ap,ACTIVITY=='S')
-
 trControl <- trainControl(method = "cv", number = 10)
 tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_ap[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_ap[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_ap[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_ap[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_ap[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_ap[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_ap[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_ap[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_ap[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_ap[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_ap[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_ap[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_ap[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_ap[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_ap[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_ap[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_ap[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_ap[,-1])
 
-fit_a <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = a_ap[,-1])
-
-fit_b <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = b_ap[,-1])
-
-fit_c <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = c_ap[,-1])
-
-fit_d <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = d_ap[,-1])
-
-fit_e <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = e_ap[,-1])
-
-fit_f <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = f_ap[,-1])
-
-fit_g <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = g_ap[,-1])
-
-fit_h <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = h_ap[,-1])
-
-fit_i <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = i_ap[,-1])
-
-fit_j <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = j_ap[,-1])
-
-fit_k <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = k_ap[,-1])
-
-fit_l <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = l_ap[,-1])
-
-fit_m <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = m_ap[,-1])
-
-fit_o <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = o_ap[,-1])
-
-fit_p <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = p_ap[,-1])
-
-fit_q <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = q_ap[,-1])
-
-fit_r <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = r_ap[,-1])
-
-fit_s <- train(class~., 
-             method = "rf", 
-             trControl = trControl,
-             metric = "Accuracy",
-             tuneGrid=tunegrid,
-             data = s_ap[,-1])
 fit_a$results
 fit_b$results
 fit_c$results
@@ -519,7 +1317,522 @@ fit_r$results
 fit_s$results
 ```
 
-```{r ap nb}
+```{r aw rf}
+
+# Random forest based on single data in accelerometer on watch.
+
+library(caret)
+a_aw <- subset(aw,ACTIVITY=='A')
+b_aw <- subset(aw,ACTIVITY=='B')
+c_aw <- subset(aw,ACTIVITY=='C')
+d_aw <- subset(aw,ACTIVITY=='D')
+e_aw <- subset(aw,ACTIVITY=='E')
+f_aw <- subset(aw,ACTIVITY=='F')
+g_aw <- subset(aw,ACTIVITY=='G')
+h_aw <- subset(aw,ACTIVITY=='H')
+i_aw <- subset(aw,ACTIVITY=='I')
+j_aw <- subset(aw,ACTIVITY=='J')
+k_aw <- subset(aw,ACTIVITY=='K')
+l_aw <- subset(aw,ACTIVITY=='L')
+m_aw <- subset(aw,ACTIVITY=='M')
+o_aw <- subset(aw,ACTIVITY=='O')
+p_aw <- subset(aw,ACTIVITY=='P')
+q_aw <- subset(aw,ACTIVITY=='Q')
+r_aw <- subset(aw,ACTIVITY=='R')
+s_aw <- subset(aw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_aw[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_aw[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_aw[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_aw[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_aw[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_aw[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_aw[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_aw[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_aw[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_aw[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_aw[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_aw[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_aw[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_aw[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_aw[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_aw[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_aw[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_aw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gp rf}
+
+# Random forest based on single data in gyroscope on phone.
+
+library(caret)
+a_gp <- subset(gp,ACTIVITY=='A')
+b_gp <- subset(gp,ACTIVITY=='B')
+c_gp <- subset(gp,ACTIVITY=='C')
+d_gp <- subset(gp,ACTIVITY=='D')
+e_gp <- subset(gp,ACTIVITY=='E')
+f_gp <- subset(gp,ACTIVITY=='F')
+g_gp <- subset(gp,ACTIVITY=='G')
+h_gp <- subset(gp,ACTIVITY=='H')
+i_gp <- subset(gp,ACTIVITY=='I')
+j_gp <- subset(gp,ACTIVITY=='J')
+k_gp <- subset(gp,ACTIVITY=='K')
+l_gp <- subset(gp,ACTIVITY=='L')
+m_gp <- subset(gp,ACTIVITY=='M')
+o_gp <- subset(gp,ACTIVITY=='O')
+p_gp <- subset(gp,ACTIVITY=='P')
+q_gp <- subset(gp,ACTIVITY=='Q')
+r_gp <- subset(gp,ACTIVITY=='R')
+s_gp <- subset(gp,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_gp[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_gp[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_gp[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_gp[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_gp[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_gp[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_gp[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_gp[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_gp[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_gp[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_gp[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_gp[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_gp[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_gp[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_gp[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_gp[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_gp[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_gp[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r gw rf}
+
+# Random forest based on single data in gyroscope on watch.
+
+library(caret)
+a_gw <- subset(gw,ACTIVITY=='A')
+b_gw <- subset(gw,ACTIVITY=='B')
+c_gw <- subset(gw,ACTIVITY=='C')
+d_gw <- subset(gw,ACTIVITY=='D')
+e_gw <- subset(gw,ACTIVITY=='E')
+f_gw <- subset(gw,ACTIVITY=='F')
+g_gw <- subset(gw,ACTIVITY=='G')
+h_gw <- subset(gw,ACTIVITY=='H')
+i_gw <- subset(gw,ACTIVITY=='I')
+j_gw <- subset(gw,ACTIVITY=='J')
+k_gw <- subset(gw,ACTIVITY=='K')
+l_gw <- subset(gw,ACTIVITY=='L')
+m_gw <- subset(gw,ACTIVITY=='M')
+o_gw <- subset(gw,ACTIVITY=='O')
+p_gw <- subset(gw,ACTIVITY=='P')
+q_gw <- subset(gw,ACTIVITY=='Q')
+r_gw <- subset(gw,ACTIVITY=='R')
+s_gw <- subset(gw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_gw[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_gw[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_gw[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_gw[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_gw[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_gw[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_gw[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_gw[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_gw[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_gw[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_gw[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_gw[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_gw[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_gw[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_gw[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_gw[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_gw[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_gw[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r p rf}
+
+# Random forest based on combined data on phone.
+
+library(caret)
+a_p <- subset(p,ACTIVITY=='A')
+b_p <- subset(p,ACTIVITY=='B')
+c_p <- subset(p,ACTIVITY=='C')
+d_p <- subset(p,ACTIVITY=='D')
+e_p <- subset(p,ACTIVITY=='E')
+f_p <- subset(p,ACTIVITY=='F')
+g_p <- subset(p,ACTIVITY=='G')
+h_p <- subset(p,ACTIVITY=='H')
+i_p <- subset(p,ACTIVITY=='I')
+j_p <- subset(p,ACTIVITY=='J')
+k_p <- subset(p,ACTIVITY=='K')
+l_p <- subset(p,ACTIVITY=='L')
+m_p <- subset(p,ACTIVITY=='M')
+o_p <- subset(p,ACTIVITY=='O')
+p_p <- subset(p,ACTIVITY=='P')
+q_p <- subset(p,ACTIVITY=='Q')
+r_p <- subset(p,ACTIVITY=='R')
+s_p <- subset(p,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_p[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_p[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_p[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_p[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_p[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_p[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_p[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_p[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_p[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_p[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_p[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_p[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_p[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_p[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_p[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_p[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_p[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_p[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r w rf}
+
+# Random forest based on combined data on watch.
+
+library(caret)
+a_w <- subset(w,ACTIVITY=='A')
+b_w <- subset(w,ACTIVITY=='B')
+c_w <- subset(w,ACTIVITY=='C')
+d_w <- subset(w,ACTIVITY=='D')
+e_w <- subset(w,ACTIVITY=='E')
+f_w <- subset(w,ACTIVITY=='F')
+g_w <- subset(w,ACTIVITY=='G')
+h_w <- subset(w,ACTIVITY=='H')
+i_w <- subset(w,ACTIVITY=='I')
+j_w <- subset(w,ACTIVITY=='J')
+k_w <- subset(w,ACTIVITY=='K')
+l_w <- subset(w,ACTIVITY=='L')
+m_w <- subset(w,ACTIVITY=='M')
+o_w <- subset(w,ACTIVITY=='O')
+p_w <- subset(w,ACTIVITY=='P')
+q_w <- subset(w,ACTIVITY=='Q')
+r_w <- subset(w,ACTIVITY=='R')
+s_w <- subset(w,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_w[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_w[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_w[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_w[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_w[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_w[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_w[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_w[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_w[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_w[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_w[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_w[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_w[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_w[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_w[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_w[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_w[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_w[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r a rf}
+
+# Random forest based on combined data in accelerometer.
+
+library(caret)
+a_a <- subset(a,ACTIVITY=='A')
+b_a <- subset(a,ACTIVITY=='B')
+c_a <- subset(a,ACTIVITY=='C')
+d_a <- subset(a,ACTIVITY=='D')
+e_a <- subset(a,ACTIVITY=='E')
+f_a <- subset(a,ACTIVITY=='F')
+g_a <- subset(a,ACTIVITY=='G')
+h_a <- subset(a,ACTIVITY=='H')
+i_a <- subset(a,ACTIVITY=='I')
+j_a <- subset(a,ACTIVITY=='J')
+k_a <- subset(a,ACTIVITY=='K')
+l_a <- subset(a,ACTIVITY=='L')
+m_a <- subset(a,ACTIVITY=='M')
+o_a <- subset(a,ACTIVITY=='O')
+p_a <- subset(a,ACTIVITY=='P')
+q_a <- subset(a,ACTIVITY=='Q')
+r_a <- subset(a,ACTIVITY=='R')
+s_a <- subset(a,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_a[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_a[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_a[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_a[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_a[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_a[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_a[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_a[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_a[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_a[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_a[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_a[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_a[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_a[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_a[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_a[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_a[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_a[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r g rf}
+
+# Random forest based on combined data in gyroscope.
+
+library(caret)
+a_g <- subset(g,ACTIVITY=='A')
+b_g <- subset(g,ACTIVITY=='B')
+c_g <- subset(g,ACTIVITY=='C')
+d_g <- subset(g,ACTIVITY=='D')
+e_g <- subset(g,ACTIVITY=='E')
+f_g <- subset(g,ACTIVITY=='F')
+g_g <- subset(g,ACTIVITY=='G')
+h_g <- subset(g,ACTIVITY=='H')
+i_g <- subset(g,ACTIVITY=='I')
+j_g <- subset(g,ACTIVITY=='J')
+k_g <- subset(g,ACTIVITY=='K')
+l_g <- subset(g,ACTIVITY=='L')
+m_g <- subset(g,ACTIVITY=='M')
+o_g <- subset(g,ACTIVITY=='O')
+p_g <- subset(g,ACTIVITY=='P')
+q_g <- subset(g,ACTIVITY=='Q')
+r_g <- subset(g,ACTIVITY=='R')
+s_g <- subset(g,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_p[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_p[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_p[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_p[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_p[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_p[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_p[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_p[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_p[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_p[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_p[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_p[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_p[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_p[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_p[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_p[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_p[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_p[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r all rf}
+
+# Random forest based on all combined data.
+
+library(caret)
+a_all <- subset(all,ACTIVITY=='A')
+b_all <- subset(all,ACTIVITY=='B')
+c_all <- subset(all,ACTIVITY=='C')
+d_all <- subset(all,ACTIVITY=='D')
+e_all <- subset(all,ACTIVITY=='E')
+f_all <- subset(all,ACTIVITY=='F')
+g_all <- subset(all,ACTIVITY=='G')
+h_all <- subset(all,ACTIVITY=='H')
+i_all <- subset(all,ACTIVITY=='I')
+j_all <- subset(all,ACTIVITY=='J')
+k_all <- subset(all,ACTIVITY=='K')
+l_all <- subset(all,ACTIVITY=='L')
+m_all <- subset(all,ACTIVITY=='M')
+o_all <- subset(all,ACTIVITY=='O')
+p_all <- subset(all,ACTIVITY=='P')
+q_all <- subset(all,ACTIVITY=='Q')
+r_all <- subset(all,ACTIVITY=='R')
+s_all <- subset(all,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+tunegrid <- expand.grid(.mtry=c(5,10,15))
+fit_a <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=a_all[,-1])
+fit_b <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=b_all[,-1])
+fit_c <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=c_all[,-1])
+fit_d <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=d_all[,-1])
+fit_e <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=e_all[,-1])
+fit_f <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=f_all[,-1])
+fit_g <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=g_all[,-1])
+fit_h <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=h_all[,-1])
+fit_i <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=i_all[,-1])
+fit_j <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=j_all[,-1])
+fit_k <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=k_all[,-1])
+fit_l <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=l_all[,-1])
+fit_m <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=m_all[,-1])
+fit_o <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=o_all[,-1])
+fit_p <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=p_all[,-1])
+fit_q <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=q_all[,-1])
+fit_r <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=r_all[,-1])
+fit_s <- train(class~., method="rf", trControl=trControl, metric="Accuracy", tuneGrid=tunegrid, data=s_all[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r ap svm}
+
+# support vector machine method using accelerometer data on phone.
+
 library(caret)
 a_ap <- subset(ap,ACTIVITY=='A')
 b_ap <- subset(ap,ACTIVITY=='B')
@@ -539,116 +1852,530 @@ p_ap <- subset(ap,ACTIVITY=='P')
 q_ap <- subset(ap,ACTIVITY=='Q')
 r_ap <- subset(ap,ACTIVITY=='R')
 s_ap <- subset(ap,ACTIVITY=='S')
-
 trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_ap[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_ap[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_ap[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_ap[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_ap[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_ap[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_ap[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_ap[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_ap[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_ap[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_ap[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_ap[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_ap[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_ap[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_ap[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_ap[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_ap[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_ap[,-1])
 
-fit_a <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = a_ap[,-1])
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
 
-fit_b <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = b_ap[,-1])
+```{r aw svm}
 
-fit_c <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = c_ap[,-1])
+# support vector machine method using accelerometer data on watch.
 
-fit_d <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = d_ap[,-1])
+library(caret)
+a_aw <- subset(aw,ACTIVITY=='A')
+b_aw <- subset(aw,ACTIVITY=='B')
+c_aw <- subset(aw,ACTIVITY=='C')
+d_aw <- subset(aw,ACTIVITY=='D')
+e_aw <- subset(aw,ACTIVITY=='E')
+f_aw <- subset(aw,ACTIVITY=='F')
+g_aw <- subset(aw,ACTIVITY=='G')
+h_aw <- subset(aw,ACTIVITY=='H')
+i_aw <- subset(aw,ACTIVITY=='I')
+j_aw <- subset(aw,ACTIVITY=='J')
+k_aw <- subset(aw,ACTIVITY=='K')
+l_aw <- subset(aw,ACTIVITY=='L')
+m_aw <- subset(aw,ACTIVITY=='M')
+o_aw <- subset(aw,ACTIVITY=='O')
+p_aw <- subset(aw,ACTIVITY=='P')
+q_aw <- subset(aw,ACTIVITY=='Q')
+r_aw <- subset(aw,ACTIVITY=='R')
+s_aw <- subset(aw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_aw[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_aw[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_aw[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_aw[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_aw[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_aw[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_aw[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_aw[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_aw[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_aw[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_aw[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_aw[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_aw[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_aw[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_aw[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_aw[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_aw[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_aw[,-1])
 
-fit_e <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = e_ap[,-1])
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
 
-fit_f <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = f_ap[,-1])
+```{r gp svm}
 
-fit_g <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = g_ap[,-1])
+# support vector machine method using gyroscope data on phone.
 
-fit_h <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = h_ap[,-1])
+library(caret)
+a_gp <- subset(gp,ACTIVITY=='A')
+b_gp <- subset(gp,ACTIVITY=='B')
+c_gp <- subset(gp,ACTIVITY=='C')
+d_gp <- subset(gp,ACTIVITY=='D')
+e_gp <- subset(gp,ACTIVITY=='E')
+f_gp <- subset(gp,ACTIVITY=='F')
+g_gp <- subset(gp,ACTIVITY=='G')
+h_gp <- subset(gp,ACTIVITY=='H')
+i_gp <- subset(gp,ACTIVITY=='I')
+j_gp <- subset(gp,ACTIVITY=='J')
+k_gp <- subset(gp,ACTIVITY=='K')
+l_gp <- subset(gp,ACTIVITY=='L')
+m_gp <- subset(gp,ACTIVITY=='M')
+o_gp <- subset(gp,ACTIVITY=='O')
+p_gp <- subset(gp,ACTIVITY=='P')
+q_gp <- subset(gp,ACTIVITY=='Q')
+r_gp <- subset(gp,ACTIVITY=='R')
+s_gp <- subset(gp,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_gp[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_gp[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_gp[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_gp[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_gp[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_gp[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_gp[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_gp[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_gp[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_gp[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_gp[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_gp[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_gp[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_gp[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_gp[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_gp[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_gp[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_gp[,-1])
 
-fit_i <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = i_ap[,-1])
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
 
-fit_j <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = j_ap[,-1])
+```{r gw svm}
 
-fit_k <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = k_ap[,-1])
+# support vector machine method using gyroscope data on watch.
 
-fit_l <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = l_ap[,-1])
+library(caret)
+a_gw <- subset(gw,ACTIVITY=='A')
+b_gw <- subset(gw,ACTIVITY=='B')
+c_gw <- subset(gw,ACTIVITY=='C')
+d_gw <- subset(gw,ACTIVITY=='D')
+e_gw <- subset(gw,ACTIVITY=='E')
+f_gw <- subset(gw,ACTIVITY=='F')
+g_gw <- subset(gw,ACTIVITY=='G')
+h_gw <- subset(gw,ACTIVITY=='H')
+i_gw <- subset(gw,ACTIVITY=='I')
+j_gw <- subset(gw,ACTIVITY=='J')
+k_gw <- subset(gw,ACTIVITY=='K')
+l_gw <- subset(gw,ACTIVITY=='L')
+m_gw <- subset(gw,ACTIVITY=='M')
+o_gw <- subset(gw,ACTIVITY=='O')
+p_gw <- subset(gw,ACTIVITY=='P')
+q_gw <- subset(gw,ACTIVITY=='Q')
+r_gw <- subset(gw,ACTIVITY=='R')
+s_gw <- subset(gw,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_gw[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_gw[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_gw[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_gw[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_gw[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_gw[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_gw[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_gw[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_gw[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_gw[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_gw[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_gw[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_gw[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_gw[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_gw[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_gw[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_gw[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_gw[,-1])
 
-fit_m <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = m_ap[,-1])
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
 
-fit_o <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = o_ap[,-1])
+```{r p svm}
 
-fit_p <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = p_ap[,-1])
+# support vector machine method using combined data on phone.
 
-fit_q <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = q_ap[,-1])
+library(caret)
+a_p <- subset(p,ACTIVITY=='A')
+b_p <- subset(p,ACTIVITY=='B')
+c_p <- subset(p,ACTIVITY=='C')
+d_p <- subset(p,ACTIVITY=='D')
+e_p <- subset(p,ACTIVITY=='E')
+f_p <- subset(p,ACTIVITY=='F')
+g_p <- subset(p,ACTIVITY=='G')
+h_p <- subset(p,ACTIVITY=='H')
+i_p <- subset(p,ACTIVITY=='I')
+j_p <- subset(p,ACTIVITY=='J')
+k_p <- subset(p,ACTIVITY=='K')
+l_p <- subset(p,ACTIVITY=='L')
+m_p <- subset(p,ACTIVITY=='M')
+o_p <- subset(p,ACTIVITY=='O')
+p_p <- subset(p,ACTIVITY=='P')
+q_p <- subset(p,ACTIVITY=='Q')
+r_p <- subset(p,ACTIVITY=='R')
+s_p <- subset(p,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_p[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_p[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_p[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_p[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_p[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_p[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_p[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_p[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_p[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_p[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_p[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_p[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_p[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_p[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_p[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_p[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_p[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_p[,-1])
 
-fit_r <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = r_ap[,-1])
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
 
-fit_s <- train(class~., 
-             method = "nb", 
-             trControl = trControl,
-             metric = "Accuracy",
-             data = s_ap[,-1])
+```{r w svm}
+
+# support vector machine method using combined data on watch.
+
+library(caret)
+a_w <- subset(w,ACTIVITY=='A')
+b_w <- subset(w,ACTIVITY=='B')
+c_w <- subset(w,ACTIVITY=='C')
+d_w <- subset(w,ACTIVITY=='D')
+e_w <- subset(w,ACTIVITY=='E')
+f_w <- subset(w,ACTIVITY=='F')
+g_w <- subset(w,ACTIVITY=='G')
+h_w <- subset(w,ACTIVITY=='H')
+i_w <- subset(w,ACTIVITY=='I')
+j_w <- subset(w,ACTIVITY=='J')
+k_w <- subset(w,ACTIVITY=='K')
+l_w <- subset(w,ACTIVITY=='L')
+m_w <- subset(w,ACTIVITY=='M')
+o_w <- subset(w,ACTIVITY=='O')
+p_w <- subset(w,ACTIVITY=='P')
+q_w <- subset(w,ACTIVITY=='Q')
+r_w <- subset(w,ACTIVITY=='R')
+s_w <- subset(w,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_w[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_w[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_w[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_w[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_w[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_w[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_w[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_w[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_w[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_w[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_w[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_w[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_w[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_w[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_w[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_w[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_w[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_w[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r a svm}
+
+# support vector machine method using accelerometer data on both phone and watch.
+
+library(caret)
+a_a <- subset(a,ACTIVITY=='A')
+b_a <- subset(a,ACTIVITY=='B')
+c_a <- subset(a,ACTIVITY=='C')
+d_a <- subset(a,ACTIVITY=='D')
+e_a <- subset(a,ACTIVITY=='E')
+f_a <- subset(a,ACTIVITY=='F')
+g_a <- subset(a,ACTIVITY=='G')
+h_a <- subset(a,ACTIVITY=='H')
+i_a <- subset(a,ACTIVITY=='I')
+j_a <- subset(a,ACTIVITY=='J')
+k_a <- subset(a,ACTIVITY=='K')
+l_a <- subset(a,ACTIVITY=='L')
+m_a <- subset(a,ACTIVITY=='M')
+o_a <- subset(a,ACTIVITY=='O')
+p_a <- subset(a,ACTIVITY=='P')
+q_a <- subset(a,ACTIVITY=='Q')
+r_a <- subset(a,ACTIVITY=='R')
+s_a <- subset(a,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_a[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_a[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_a[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_a[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_a[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_a[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_a[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_a[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_a[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_a[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_a[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_a[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_a[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_a[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_a[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_a[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_a[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_a[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r g svm}
+
+# support vector machine method using gyroscope data on both phone and watch.
+
+library(caret)
+a_g <- subset(g,ACTIVITY=='A')
+b_g <- subset(g,ACTIVITY=='B')
+c_g <- subset(g,ACTIVITY=='C')
+d_g <- subset(g,ACTIVITY=='D')
+e_g <- subset(g,ACTIVITY=='E')
+f_g <- subset(g,ACTIVITY=='F')
+g_g <- subset(g,ACTIVITY=='G')
+h_g <- subset(g,ACTIVITY=='H')
+i_g <- subset(g,ACTIVITY=='I')
+j_g <- subset(g,ACTIVITY=='J')
+k_g <- subset(g,ACTIVITY=='K')
+l_g <- subset(g,ACTIVITY=='L')
+m_g <- subset(g,ACTIVITY=='M')
+o_g <- subset(g,ACTIVITY=='O')
+p_g <- subset(g,ACTIVITY=='P')
+q_g <- subset(g,ACTIVITY=='Q')
+r_g <- subset(g,ACTIVITY=='R')
+s_g <- subset(g,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_g[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_g[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_g[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_g[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_g[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_g[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_g[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_g[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_g[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_g[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_g[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_g[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_g[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_g[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_g[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_g[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_g[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_g[,-1])
+
+fit_a$results
+fit_b$results
+fit_c$results
+fit_d$results
+fit_e$results
+fit_f$results
+fit_g$results
+fit_h$results
+fit_i$results
+fit_j$results
+fit_k$results
+fit_l$results
+fit_m$results
+fit_o$results
+fit_p$results
+fit_q$results
+fit_r$results
+fit_s$results
+```
+
+```{r all svm}
+
+# support vector machine method using all combined data.
+
+library(caret)
+a_all <- subset(all,ACTIVITY=='A')
+b_all <- subset(all,ACTIVITY=='B')
+c_all <- subset(all,ACTIVITY=='C')
+d_all <- subset(all,ACTIVITY=='D')
+e_all <- subset(all,ACTIVITY=='E')
+f_all <- subset(all,ACTIVITY=='F')
+g_all <- subset(all,ACTIVITY=='G')
+h_all <- subset(all,ACTIVITY=='H')
+i_all <- subset(all,ACTIVITY=='I')
+j_all <- subset(all,ACTIVITY=='J')
+k_all <- subset(all,ACTIVITY=='K')
+l_all <- subset(all,ACTIVITY=='L')
+m_all <- subset(all,ACTIVITY=='M')
+o_all <- subset(all,ACTIVITY=='O')
+p_all <- subset(all,ACTIVITY=='P')
+q_all <- subset(all,ACTIVITY=='Q')
+r_all <- subset(all,ACTIVITY=='R')
+s_all <- subset(all,ACTIVITY=='S')
+trControl <- trainControl(method = "cv", number = 10)
+fit_a <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=a_all[,-1])
+fit_b <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=b_all[,-1])
+fit_c <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=c_all[,-1])
+fit_d <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=d_all[,-1])
+fit_e <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=e_all[,-1])
+fit_f <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=f_all[,-1])
+fit_g <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=g_all[,-1])
+fit_h <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=h_all[,-1])
+fit_i <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=i_all[,-1])
+fit_j <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=j_all[,-1])
+fit_k <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=k_all[,-1])
+fit_l <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=l_all[,-1])
+fit_m <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=m_all[,-1])
+fit_o <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=o_all[,-1])
+fit_p <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=p_all[,-1])
+fit_q <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=q_all[,-1])
+fit_r <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=r_all[,-1])
+fit_s <- train(class~., method="svmLinear2", trControl=trControl, metric="Accuracy", data=s_all[,-1])
+
 fit_a$results
 fit_b$results
 fit_c$results
