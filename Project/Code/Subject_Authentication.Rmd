@@ -2265,6 +2265,328 @@ final_svmLinear
 
 
 
+```{r predict_rpart}
+##The block below is for the prediction of decision tree method. The accuracy of decision tree is saved in vectors tmpfinal_rpart_1-tmpfinal_rpart_9 and vector final_rpart, which is the average of vectors tmpfinal_rpart_1-tmpfinal_rpart_9.
+# install.packages("ISLR")
+# install.packages("caret")
+# install.packages("C50")
+# install.packages("pROC")
+# install.packages("ROCR")
+# install.packages("rpart")
+# install.packages("e1071")
+# install.packages("dplyr")
+library(ISLR)
+library(caret)
+library(C50)
+library(pROC)
+library(ROCR)
+library(rpart)
+library(e1071)
+library(dplyr)
+tmpfinal_rpart_1<-c()
+tmpfinal_rpart_2<-c()
+tmpfinal_rpart_3<-c()
+tmpfinal_rpart_4<-c()
+tmpfinal_rpart_5<-c()
+tmpfinal_rpart_6<-c()
+tmpfinal_rpart_7<-c()
+tmpfinal_rpart_8<-c()
+tmpfinal_rpart_9<-c()
+final_rpart<-c()
+if(Num<10){
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_accel_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_accel_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_accel_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_1<-c(tmpfinal_rpart_1,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_1)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_gyro_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_gyro_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_gyro_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_2<-c(tmpfinal_rpart_2,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_2)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_accel_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_accel_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_accel_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_3<-c(tmpfinal_rpart_3,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_3)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_gyro_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_gyro_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_gyro_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_4<-c(tmpfinal_rpart_4,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_4)/18)
+
+
+
+
+
+
+
+
+}
+if(Num>9){
+  for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_accel_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_accel_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_accel_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_1<-c(tmp_final_rpart_1,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_1)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_gyro_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_gyro_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_gyro_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_2<-c(tmp_final_rpart_2,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_2)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_accel_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_accel_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_accel_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_3<-c(tmp_final_rpart_3,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_3)/18)
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_gyro_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_gyro_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_gyro_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_4<-c(tmp_final_rpart_4,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_4)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_5<-c(tmp_final_rpart_5,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_5)/18)
+
+
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_6<-c(tmp_final_rpart_6,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_6)/18)
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_accel_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_accel_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_accel_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_7<-c(tmp_final_rpart_7,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_7)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_gyro_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_gyro_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_gyro_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_8<-c(tmp_final_rpart_8,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_8)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_all_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_all_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_all_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmp_final_rpart_9<-c(tmp_final_rpart_9,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmp_final_rpart_9)/18)
+
+
+
+
+
+}
+
+
+tmpfinal_rpart_5<-c()
+tmpfinal_rpart_6<-c()
+tmpfinal_rpart_7<-c()
+tmpfinal_rpart_8<-c()
+tmpfinal_rpart_9<-c()
+
+if(Num<10){
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_5<-c(tmpfinal_rpart_5,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_5)/18)
+
+
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_6<-c(tmpfinal_rpart_6,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_6)/18)
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_accel_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_accel_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_accel_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_7<-c(tmpfinal_rpart_7,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_7)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_gyro_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_gyro_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_gyro_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_8<-c(tmpfinal_rpart_8,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_8)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_160",Num,'_select_',i,'_all_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_160",Num,'_select_',i,'_all_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_160",Num,'_select_',i,'_all_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_9<-c(tmpfinal_rpart_9,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_9)/18)
+
+
+
+
+
+}
+
+
+
+if(Num>9){
+  for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_phone_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_phone_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_phone_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_5<-c(tmpfinal_rpart_5,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_5)/18)
+
+
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_watch_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_watch_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_watch_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_6<-c(tmpfinal_rpart_6,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_6)/18)
+
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_accel_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_accel_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_accel_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_7<-c(tmpfinal_rpart_7,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_7)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_gyro_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_gyro_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_gyro_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_8<-c(tmpfinal_rpart_8,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_8)/18)
+
+
+for (i in ACTIVITY){
+assign(paste("model",i,sep=""),train(class~.,method="rpart",metric="Accuracy",data=get(paste("data_16",Num,'_select_',i,'_all_train',sep=""))))
+assign(paste("p_",i,sep=""),predict(get(paste("model",i,sep="")),get(paste("data_16",Num,'_select_',i,'_all_test',sep=""))))
+assign(paste("c_",i,sep=""),table(get(paste("data_16",Num,'_select_',i,'_all_test',sep=""))$class,get(paste("p_",i,sep="")),dnn = c('Actual','Predicted')))
+assign(paste("m_",i,sep=""),confusionMatrix(get(paste("c_",i,sep=""))))
+tmpfinal_rpart_9<-c(tmpfinal_rpart_9,as.numeric(get(paste("m_",i,sep=""))$overall[1]["Accuracy"]))  
+  
+}
+final_rpart<-c(final_rpart,sum(tmpfinal_rpart_9)/18)
+
+
+}
+final_rpart
+```
+
 ```{r build_table}
 #Build the table we put in the paper for svmLinear. If we change the name of variables, we can get the table of other methods.
 test_1<-matrix()
