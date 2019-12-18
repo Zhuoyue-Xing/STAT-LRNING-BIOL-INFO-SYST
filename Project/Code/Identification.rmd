@@ -3,10 +3,6 @@ title: "Identification"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ```{r data load}
 
 #Load data from .arff files.
