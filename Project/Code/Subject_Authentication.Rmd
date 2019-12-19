@@ -2549,28 +2549,3 @@ paper_table
 ```
 
 
-```{r figure}
-#Build the figure we put in the paper.
-library(ggplot2)
-time<-c(1993,1998,2003,2008)
-RF<-c(0.758937767,0.773276744,0.811502059,0.833975596,0.851111111,0.857433133)
-KNN<-c(0.0138,0.0125,0.0075,0.0069)
-DT<-c(0.0138,0.0125,0.0075,0.0069)
-#R语言基础包作图
-plot(year,Res,col=2,type="b",ylim=c(0.005,0.035),xlab = "Year",ylab ="Morbidity")
-lines(year,COPD,col=3,type="b")
-legend("topright",pch=c(15,15),legend=c("Respiratory","COPD"),col=c(2,3),bty="n")
-
-#ggplot包作图
-dd <- data.frame(year,Res,COPD)
-ggplot()+geom_line(data = dd,aes(x = year,y = Res,colour = "Respiratory"),size=1)+
-  geom_point(data = dd,aes(x = year,y = Res,colour = "Respiratory"),size=3)+
-  ylim(0.005,0.025)+
-  geom_line(data = dd,aes(x = year,y = COPD,colour ="COPD"),size=1) + 
-  geom_point(data = dd,aes(x = year,y = COPD,colour = "COPD"),size=3)+
-  scale_colour_manual("",values = c("Respiratory" = "red","COPD" = "green"))+
-  xlab("Year")+ylab("Morbidity")+
-  theme(text=element_text(size=13, family="Comic Sans MS"))
-
-```
-
